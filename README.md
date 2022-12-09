@@ -19,7 +19,7 @@ Welcome to 2048 Discord Bot! This is a bot that you can use to play the classic 
 
 ```bash
 git clone https://github.com/JustaSqu1d/2048-discord-bot.git
-cd 2048-discord-bot
+cd 2048-discord
 pip3 install -r requirements.txt
 ```
 
