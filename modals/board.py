@@ -58,15 +58,17 @@ def reverse(matrix):
 
 def merge(matrix):
     changed = False
+    score = 0
     for i in range(4):
         for j in range(3):
 
             if matrix[i][j] == matrix[i][j + 1] and matrix[i][j] != 0:
                 matrix[i][j] = matrix[i][j] * 2
                 matrix[i][j + 1] = 0
+                score += matrix[i][j]
                 changed = True
 
-    return matrix, changed
+    return matrix, changed, score
 
 
 class Tile(discord.ui.Button):
@@ -98,6 +100,8 @@ class Board(discord.ui.View):
         self.matrix = matrix
         self.add_new()
         self.add_new()
+
+        self.score = 0
 
         self.update_board()
 
@@ -168,11 +172,12 @@ class Board(discord.ui.View):
 
     def move_left(self, matrix):
         new, changed1 = compress(matrix)
-        new, changed2 = merge(new)
+        new, changed2, score = merge(new)
         changed = changed1 or changed2
         new, temp = compress(new)
         if changed:
             self.matrix = new
+            self.score += score
         return new, changed
 
     def move_right(self, matrix):
@@ -196,58 +201,49 @@ class Board(discord.ui.View):
         self.matrix = new
         return new, changed
 
-    async def up_callback(self, interaction: discord.Interaction):
-        matrix, changed = self.move_up(self.matrix)
+    async def update_view(self, changed: bool, interaction: discord.Interaction):
         if changed:
             self.add_new()
             self.update_board()
             if self.get_game_state() == 1:
-                await interaction.response.edit_message(content="You won!", view=None)
+                self.disable_all_items()
+                await interaction.response.edit_message(embed=discord.Embed(
+                    title=f"You Won! (Score: {self.score})",
+                    description="You reached 2048!",
+                    color=discord.Color.green(),
+                ), view=self)
             elif self.get_game_state() == 2:
-                await interaction.response.edit_message(content="You lost!", view=None)
+                self.disable_all_items()
+                await interaction.response.edit_message(embed=discord.Embed(
+                    title=f"You Lost! (Score: {self.score})",
+                    description="You lost the game!",
+                    color=discord.Color.red(),
+                ), view=self)
             else:
-                await interaction.response.edit_message(view=self)
+                await interaction.response.edit_message(embed=discord.Embed(
+                    title=f"Score: {self.score}",
+                    description="Use the buttons below to play!",
+                    color=discord.Color.blurple(),
+                ), view=self)
         else:
-            await interaction.response.send_message("That doesn't seem to do anything...", ephemeral=True)
+            await interaction.response.edit_message(embed=discord.Embed(
+                title=f"Score: {self.score}",
+                description="That doesn't seem to do anything...",
+                color=discord.Color.yellow(),
+            ), view=self)
+
+    async def up_callback(self, interaction: discord.Interaction):
+        matrix, changed = self.move_up(self.matrix)
+        await self.update_view(changed, interaction)
 
     async def down_callback(self, interaction: discord.Interaction):
         matrix, changed = self.move_down(self.matrix)
-        if changed:
-            self.add_new()
-            self.update_board()
-            if self.get_game_state() == 1:
-                await interaction.response.edit_message(content="You won!", view=None)
-            elif self.get_game_state() == 2:
-                await interaction.response.edit_message(content="You lost!", view=None)
-            else:
-                await interaction.response.edit_message(view=self)
-        else:
-            await interaction.response.send_message("That doesn't seem to do anything...", ephemeral=True)
+        await self.update_view(changed, interaction)
 
     async def left_callback(self, interaction: discord.Interaction):
         matrix, changed = self.move_left(self.matrix)
-        if changed:
-            self.add_new()
-            self.update_board()
-            if self.get_game_state() == 1:
-                await interaction.response.edit_message(content="You won!", view=None)
-            elif self.get_game_state() == 2:
-                await interaction.response.edit_message(content="You lost!", view=None)
-            else:
-                await interaction.response.edit_message(view=self)
-        else:
-            await interaction.response.send_message("That doesn't seem to do anything...", ephemeral=True)
+        await self.update_view(changed, interaction)
 
     async def right_callback(self, interaction: discord.Interaction):
         matrix, changed = self.move_right(self.matrix)
-        if changed:
-            self.add_new()
-            self.update_board()
-            if self.get_game_state() == 1:
-                await interaction.response.edit_message(content="You won!")
-            elif self.get_game_state() == 2:
-                await interaction.response.edit_message(content="You lost!")
-            else:
-                await interaction.response.edit_message(view=self)
-        else:
-            await interaction.response.send_message("That doesn't seem to do anything...", ephemeral=True)
+        await self.update_view(changed, interaction)

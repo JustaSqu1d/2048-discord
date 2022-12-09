@@ -24,7 +24,11 @@ async def play(ctx, gamemode: str):
     Public Co-op: Play with other people, anyone can join!
     """
     await ctx.respond(
-        embed=discord.Embed(title="2048", color = discord.Color.red()),
+        embed=discord.Embed(
+            title=f"Score: 0",
+            description="Use the buttons below to play!",
+            color=discord.Color.blurple(),
+        ),
         view=Board(),
         ephemeral=True if gamemode == "Solo" else False
     )
