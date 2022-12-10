@@ -1,4 +1,6 @@
-from json import load
+
+import json
+import os
 
 import discord
 
@@ -34,6 +36,12 @@ async def play(ctx, gamemode: str):
     )
 
 
-with open('config.json') as f:
-    config = load(f)
-    bot.run(config["token"])
+try:
+    TOKEN = os.environ.get("TOKEN")
+
+except:
+    with open("config.json") as f:
+        config = json.load(f)
+        TOKEN = config["token"]
+
+bot.run(TOKEN)
