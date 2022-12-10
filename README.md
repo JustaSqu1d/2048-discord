@@ -15,7 +15,7 @@ Welcome to 2048 Discord Bot! This is a bot that you can use to play the classic 
 
 3. Enjoy the game!
 
-## Running on the Cloud
+## Running on the Cloud (Requires GitHub account)
 
 [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/qrMGUC?referralCode=t96gPh)
 
