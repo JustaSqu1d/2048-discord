@@ -15,6 +15,20 @@ Welcome to 2048 Discord Bot! This is a bot that you can use to play the classic 
 
 3. Enjoy the game!
 
+## Running on the Cloud
+
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/qrMGUC?referralCode=t96gPh)
+
+- Follow directions on the Railway website, until you get to the "Environment Variables" section.
+- Go to the [Discord Developer Portal](https://discord.com/developers/applications) and sign in
+- Create a new application.
+- Then go to the Bot tab and click "Add Bot".
+- Reset the token and paste it in the `token` textbox.
+- Go to the OAuth2 tab and select the "bot" scope.
+- Copy the link and paste it in your browser.
+- Invite the bot to your server.
+- Click deploy and enjoy!
+
 ## Running It Locally
 
 ```bash
