@@ -1,14 +1,13 @@
 import random
 from math import log2
-
 import discord
 
 END_SCORE = 2048
 
-up_button = discord.ui.Button(emoji="⬆️", style=discord.ButtonStyle.green, row=4)
-down_button = discord.ui.Button(emoji="⬇️", style=discord.ButtonStyle.green, row=4)
-left_button = discord.ui.Button(emoji="⬅️", style=discord.ButtonStyle.green, row=4)
-right_button = discord.ui.Button(emoji="➡️", style=discord.ButtonStyle.green, row=4)
+up_button = discord.ui.Button(emoji="🔼", style=discord.ButtonStyle.green, row=4)
+down_button = discord.ui.Button(emoji="🔽", style=discord.ButtonStyle.green, row=4)
+left_button = discord.ui.Button(emoji="◀️", style=discord.ButtonStyle.green, row=4)
+right_button = discord.ui.Button(emoji="▶️", style=discord.ButtonStyle.green, row=4)
 
 colors = [discord.ButtonStyle.grey,
           discord.ButtonStyle.green, discord.ButtonStyle.red, discord.ButtonStyle.blurple]
@@ -206,17 +205,15 @@ class Board(discord.ui.View):
             self.add_new()
             self.update_board()
             if self.get_game_state() == 1:
-                self.disable_all_items()
                 await interaction.response.edit_message(embed=discord.Embed(
-                    title=f"You Won! (Score: {self.score})",
+                    title=f"You won with a score of {self.score}!",
                     description="You reached 2048!",
                     color=discord.Color.green(),
                 ), view=self)
             elif self.get_game_state() == 2:
-                self.disable_all_items()
                 await interaction.response.edit_message(embed=discord.Embed(
                     title=f"You Lost! (Score: {self.score})",
-                    description="You lost the game!",
+                    description="You lost the game... 😔",
                     color=discord.Color.red(),
                 ), view=self)
             else:
@@ -227,8 +224,8 @@ class Board(discord.ui.View):
                 ), view=self)
         else:
             await interaction.response.edit_message(embed=discord.Embed(
-                title=f"Score: {self.score}",
-                description="That doesn't seem to do anything...",
+                title=f"Error",
+                description="That move won\'t do anything! Try another move.",
                 color=discord.Color.yellow(),
             ), view=self)
 
@@ -247,3 +244,5 @@ class Board(discord.ui.View):
     async def right_callback(self, interaction: discord.Interaction):
         matrix, changed = self.move_right(self.matrix)
         await self.update_view(changed, interaction)
+
+      
