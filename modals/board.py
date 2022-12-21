@@ -244,3 +244,5 @@ class Board(discord.ui.View):
     async def right_callback(self, interaction: discord.Interaction):
         matrix, changed = self.move_right(self.matrix)
         await self.update_view(changed, interaction)
+
+      
